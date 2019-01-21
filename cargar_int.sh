@@ -1,10 +1,9 @@
 #==========================================================================*
-# enviar_rpt_int.sh : Envia por correo el reporte Internacional.
-#==========================================================================*
-#
-#              Fecha: 2018-12-xx
+# cargar_int.sh : Si dia 01 respalda mes anterior
+#                 llama int2.php (busqueda con patron)
+#                 llama cargar_int.php (carga base de datos)
+#              Fecha: 2019-12-21
 #              Autor: Edixon Idrogo
-#              
 #-------------------------------------------------------------------------- #
 
 # Determinar fecha de trabajo 
@@ -23,6 +22,17 @@ fi
 ano="`echo "$ayer" | cut -c1-2`"
 mes="`echo "$ayer" | cut -c3-4`"
 dia="`echo "$ayer" | cut -c5-6`"
+
+ayer2="`/aplicaciones/mediacion/bin/XFZDIANT $hoy`"
+ano2="`echo "$ayer2" | cut -c1-2`"
+mes2="`echo "$ayer2" | cut -c3-4`"
+dias2="`echo "$ayer2" | cut -c5-6`"
+hdb="`echo "$hoy" | cut -c5-6`"
+
+if test "$hdb" = "01"
+then
+mysqldump -h161.196.29.227 -uroot -pBd_ur_2006 --opt mediacion_dbo  internacional --where="fecha_llamada LIKE '$centuria$ano2$mes2%'" > /data/mediacion_dbo/respaldo_BD/int_$ano2$mes2.sql;
+fi
 
 #		fecha 		->	12122018 
 fecha=`echo $dia$mes$centuria$ano`
@@ -43,5 +53,5 @@ php /aplicaciones/mediacion/centrales/web/internacionales/int2.php - $fecha $pat
 resultado=`ps -fumediacion | grep cargar_int.php | grep -v grep`
 if test "$resultado" = ""
 	then
-		php /aplicaciones/mediacion/centrales/web/internacionales/cargar_int.php  - $fecha
+		php /aplicaciones/mediacion/centrales/web/internacionales/cargar_int.php - $fecha $centuria$ano2$mes2
 fi

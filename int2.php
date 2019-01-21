@@ -1,4 +1,11 @@
 <?php
+#==========================================================================*
+# int2.php : Se llama programa de busqueda con los parametros asignados
+#            salida tmp.txt
+#              Fecha: 2019-12-21
+#              Autor: Edixon Idrogo
+#-------------------------------------------------------------------------- #
+
 	$d=$argv[2];
 	$p=$argv[3];
 	$nom=$argv[4];

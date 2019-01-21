@@ -1,16 +1,18 @@
 <?php
+#==========================================================================*
+# grafica.php : formar el archivo pdf insertando la grafica generada de 
+#                grafica.php
+#              Fecha: 2019-12-21
+#              Autor: Edixon Idrogo
+#-------------------------------------------------------------------------- #
 require("/aplicaciones/mediacion/centrales/web/colecta/fpdf/fpdf.php");
-
-#var_dump($days);exit();
-
 setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
-
 class PDF extends FPDF
 {
     //Cabecera de página
     function Header()
     {
-        $this->Image('/aplicaciones/mediacion/centrales/web/colecta/imagenes/cantv.png',10,8,33,0,0);//,'http://localhost/balanceo_colec_trans/p_bal_colecta_colecta_pdf.php');
+        $this->Image('/aplicaciones/mediacion/centrales/web/colecta/imagenes/cantv.png',10,8,33,0,0);
         $this->SetFont('Times','B',12);
         $this->Cell(40);
         $this->Cell(0,4,utf8_decode("COORDINACIÓN DE MEDIACIÓN"),0,0,'L',0);
@@ -20,7 +22,6 @@ class PDF extends FPDF
         $this->Cell(0,4,utf8_decode("COMPORTAMIENTO DIARIO. TRAFICO DDI V-M"),0,0,'L',0);
         $this->ln();
         $this->Line(10, 22, 290, 22);
-        //$this->Ln(20);
     }
 
     //Pie de página
@@ -52,13 +53,11 @@ class PDF extends FPDF
             $this->SetFillColor('0','100','0');
             $this->Cell(8.8,5,$dias[$days[$j][1]],1,0,'C',1);
         }
-
         $this->ln();
         $this->Cell(9);
         for ($j=0;$j<count($days);$j++)
         {
             $this->Cell(8.8,5,trim(substr($days[$j][0],6,2)) . '-' . trim(substr($days[$j][0],4,2)),1,0,'C',0);
-
         }
 
         $this->ln();
@@ -76,7 +75,6 @@ class PDF extends FPDF
         {
             $this->Cell(8.8,5,$days[$j][2],1,0,'C',0);
         }
-
         $this->Image("/aplicaciones/mediacion/centrales/web/internacionales/gf_int/grafica.png",5,25,300,120,'PNG');
     }
 }
@@ -88,18 +86,7 @@ $pdf=new PDF('L','mm','A4');
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $dias = array('','Lun','Mar','Mier','Jue','Vie','Sab','Dom');
-
-
-
-
-
-
-
 $pdf->FancyTable($dias,$days,$minute);
-
-
 session_unset();
-//$fecha_reporte= date('Y-m-d', mktime(0, 0, 0, date('m'), date('d')-1 , date('y')));
 $pdf->Output("/aplicaciones/mediacion/centrales/web/internacionales/gf_int/int.pdf");
-//$pdf->Output("/home/mediacion/centrales/web/transformacion/reportes_gf/gf_colecta_diaria_$fecha_reporte.pdf");
 ?>

@@ -1,4 +1,12 @@
 <?php
+#==========================================================================*
+# grafica.php : formar la imagen de la grafica
+#                grafica.php
+#              consulta la tabla int_bk con formando interccesion grafica cantidad,duracion y fecha_llamada
+#              Fecha: 2019-12-21
+#              Autor: Edixon Idrogo
+#-------------------------------------------------------------------------- #
+
 include ("/aplicaciones/mediacion/centrales/web/colecta/jpgraph/src/jpgraph.php");
 include ("/aplicaciones/mediacion/centrales/web/colecta/jpgraph/src/jpgraph_line.php");
 include_once("/aplicaciones/mediacion/centrales/web/colecta/clase_principal/class_principal.php");
@@ -14,7 +22,7 @@ $fecha=$argv[2];
 $fec_fin = $fecha;
 $fec_ini = substr($fecha,0,4).substr($fecha,4,2)."01";
 
-$fechas = $base->consulta_base_de_datos("SELECT a.fecha_llamada,count(*) as llamadas,ROUND(SUM(a.duracion)/60) AS minutos FROM internacional a  WHERE a.fecha_llamada BETWEEN '$fec_ini' AND '$fec_fin' GROUP BY a.fecha_llamada",$base->base,$conexion);
+$fechas = $base->consulta_base_de_datos("SELECT fecha_llamada,cantidad,duracion FROM int_bk  WHERE fecha_llamada BETWEEN '$fec_ini' AND '$fec_fin' GROUP BY fecha_llamada",$base->base,$conexion);
 
 $minute = array();
 $dias = array();
@@ -22,22 +30,21 @@ $calls = array();
 
 while ($fila = $base->obtener_resultados($fechas))
 {
-		$minute[] = (int)$fila['minutos'];
-		$calls[] = (int)$fila['llamadas'];
+		$minute[] = (int)$fila['duracion'];
+		$calls[] = (int)$fila['cantidad'];
 		$fec = $fila['fecha_llamada'];
 		$dias[] = substr($fec,6,2);
 		
 		$days[] = array(
 			$fec,
 			date('N', strtotime(substr($fec,0,4).substr($fec,4,2).substr($fec,6,2))),
-			(int)$fila['minutos'],
-			(int)$fila['llamadas']
+			(int)$fila['duracion'],
+			(int)$fila['cantidad']
 		);
-
-		
-
-
 }
+
+#var_dump($days);exit();
+
 
 $graph = new Graph(1100,400,"auto");
 $graph->SetScale('textlin');

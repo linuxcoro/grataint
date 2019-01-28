@@ -1,22 +1,35 @@
 <?php
 #==========================================================================*
-# mail_int.sh : Envia mail con el pdf adjunto
+# mail_int.php : Envia mail con el pdf adjunto
 #               Reporte Comportamiento del Tráfico V-M:
 #              Fecha: 2019-12-21
 #              Autor: Edixon Idrogo
 # ..........................................................................
 $fecha=$argv[2];
 $bar = strtotime($fecha); 
-$candy = strtotime('+1 days',$bar); 
-$date = date('d/m/Y',$candy);
+$date = date('d/m/Y',$bar);
+$date2 = date('d-m-y',$bar);
 
-// , jguerr@cantv.com.ve
-$to          = "eidrog01@cantv.com.ve"; // addresses to email pdf to
+#$to          = "eidrog01@cantv.com.ve"; // addresses to email pdf to
+$to          = "eidrog01@cantv.com.ve,jguerr@cantv.com.ve,jcasan@cantv.com.ve,gbulot01@cantv.com.ve"; // addresses to email pdf to
+$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+$mes = date('m',$bar);
 $from        = "monitoreo@cantv.com.ve"; // address message is sent from
-$subject     = "Reporte Comportamiento del Tráfico V-M $date"; // email subject
-$body        = "<p>El PDF esta adjunto.</p>"; // email body
+$subject     = utf8_decode("Reporte Comportamiento del Tráfico V-M Correspondiente al Mes de: ".$meses[$mes-1]." ".substr($date, -4)." - Data al: ".$date);
+$body        = utf8_decode("Buenos días,<br>
+	<p>Se incluyen gráficas del comportamiento de llamadas del mes de ".$meses[$mes-1]." en base a la cantidad de llamadas y duración de las mismas.</p>
+<pre>
+Informa:                                           
+                                                        
+	Aplicacion SGCE del Servidor VMDLIND01   
+	
+	Sistema de Gestion y Control Estadistico
+	Operacion y Mantenimiento de Sistemas de Mediacion
+	Coordinacion de Mediacion
+</pre>
+"); // email body
 $pdfLocation = "/aplicaciones/mediacion/centrales/web/internacionales/gf_int/int.pdf"; // file location
-$pdfName     = "int.pdf"; // pdf file name recipient will get
+$pdfName     = "int_$date2.pdf"; // pdf file name recipient will get
 $filetype    = "application/pdf"; // type
 
 // creates headers and mime boundary
